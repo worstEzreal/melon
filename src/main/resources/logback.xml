@@ -1,0 +1,58 @@
+<configuration scan="true" scanPeriod="30 seconds" packagingData="true">
+
+    <property name="logPath" value="/log/Melon/"/>
+    <property name="logProfile" value="dev"/>
+
+    <appender name="stdoutAppender" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %thread [%level] %logger:%line %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 日志输出 -->
+    <appender name="melonAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logPath}/melon.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logPath}/melon.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!-- 保留 30 天 -->
+            <maxHistory>30</maxHistory>
+
+            <!-- 每个日志文件最大 1G -->
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>1GB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %thread [%level] %logger:%line %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <if condition='property("logProfile").equals("prod")'>
+        <then>
+            <logger name="com.worstEzreal.melon" level="INFO" additivity="false">
+                <appender-ref ref="melonAppender"/>
+            </logger>
+
+            <root level="INFO">
+                <appender-ref ref="melonAppender"/>
+            </root>
+        </then>
+        <else>
+
+            <logger name="com.worstEzreal.melon" level="DEBUG" additivity="false">
+                <appender-ref ref="stdoutAppender"/>
+            </logger>
+
+            <logger name="com.worstEzreal.melon.task.dao.TaskDao.getLastUnDoneTask" level="INFO" additivity="false">
+                <appender-ref ref="stdoutAppender"/>
+            </logger>
+
+            <root level="INFO">
+                <appender-ref ref="stdoutAppender"/>
+            </root>
+        </else>
+    </if>
+
+</configuration>

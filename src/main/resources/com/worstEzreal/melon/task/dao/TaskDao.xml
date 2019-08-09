@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.worstEzreal.melon.task.dao.TaskDao">
+
+    <select id="getByTaskId" resultType="com.worstEzreal.melon.task.entity.Task">
+        SELECT *
+        FROM melon_task
+        WHERE task_id = #{taskId}
+    </select>
+
+    <select id="getLastUnDoneTask" resultType="com.worstEzreal.melon.task.entity.Task">
+        SELECT *
+        FROM melon_task
+        WHERE task_status = 'W'
+        ORDER BY create_time DESC
+        LIMIT 1;
+    </select>
+
+    <update id="update">
+        UPDATE melon_task
+        SET task_status = #{taskStatus},
+            update_time = #{updateTime}
+        WHERE id = #{id}
+    </update>
+
+    <insert id="save">
+        INSERT INTO `melon_task` (
+            `task_id`,
+            `task_type`,
+            `task_status`,
+            `create_time`,
+            `update_time`
+        ) VALUES (
+            #{taskId},
+            #{taskType},
+            #{taskStatus},
+            #{createTime},
+            #{updateTime}
+        );
+    </insert>
+
+</mapper>
