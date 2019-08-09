@@ -43,7 +43,7 @@ public class TaskService {
         String taskId = UUID.randomUUID().toString().replaceAll("-", "");
         LocalDateTime now = LocalDateTime.now();
         Task task = new Task();
-        task.setTaskId(UUID.randomUUID().toString().replaceAll("-", ""));
+        task.setTaskId(taskId);
         task.setTaskStatus("W");
         task.setTaskType(taskType);
         task.setCreateTime(now);
